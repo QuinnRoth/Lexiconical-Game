@@ -19,9 +19,11 @@ api_key = os.getenv("API_KEY")
 
 def checkAnswer(test):
 
-    if re.search(r"\s*", test):
-        print("Invalid Word")
+    if re.search(r"([^a-zA-Z])", test):
+        print("Invalid Word in first if")
         return False
+
+
 
     # API url
     url = "https://www.dictionaryapi.com/api/v3/references/collegiate/json/" + test + "?key=" + api_key
@@ -40,10 +42,10 @@ def checkAnswer(test):
             if isinstance(entry, dict) and 'meta' in entry and entry['meta']:  # if the word is in the dictionary
                 return True
             else:
-                print("Invalid Word")
+                print("Invalid Word isinstance")
                 return False
     except AttributeError:  # for any errors
-        print("Invalid Word")
+        print("Invalid Word attribute error")
         return False
 
 
@@ -55,9 +57,9 @@ def checkRules(test):
         if rule2:
             rule3 = re.search(r"^[aeiouy].*[aeiouy]$", test)
             if rule3:
-                rule4 = re.search(r".* {11}", test)
+                rule4 = re.search(r"(.*){12}", test)
                 if rule4:
-                    rule5 = re.search("oufesfsoie", test)
+                    rule5 = re.search("insouciance", test)
                     if rule5:
                         return 5
                     return 4
@@ -69,11 +71,11 @@ def checkRules(test):
 
 def printRules(num):
     if num > 4:
-        print("")
+        print("Congrats you got today's word!")
     if num > 3:
-        print("rule 5")
+        print("Rule 5: Guess today's word!")
     if num > 2:
-        print("rule 4")
+        print("Rule 4: Must be 11 characters long.")
     if num > 1:
         print("Rule 3: The beginning and end must both be vowels.")
     if num > 0:
@@ -85,9 +87,10 @@ score = 0
 
 while 1:
     printRules(score)
-    print("Enter a word that follows the rules")
+    print("Enter a word that follows the rules or blank if you wold like to quit.")
     answer = input()
-
+    if answer == "":
+        quit(0)
     if checkAnswer(answer):
         score = checkRules(answer)
         print(score)
